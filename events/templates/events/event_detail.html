@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-gray-800 rounded-xl p-8 shadow-lg">
+        <div class="flex justify-between items-start mb-6">
+            <h1 class="text-4xl font-bold text-white">{{ event.name }}</h1>
+            <div class="flex space-x-2">
+                <a href="{% url 'event_update' event.id %}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md font-medium text-sm">Edit</a>
+                <a href="{% url 'event_delete' event.id %}" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md font-medium text-sm">Delete</a>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div>
+                <h3 class="text-gray-400 text-sm font-semibold uppercase mb-2">Description</h3>
+                <p class="text-gray-200 text-lg">{{ event.description }}</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-gray-400 text-sm font-semibold uppercase mb-2">Date & Time</h3>
+                    <p class="text-gray-200">📅 {{ event.date }}</p>
+                    <p class="text-gray-200">🕐 {{ event.time }}</p>
+                </div>
+
+                <div>
+                    <h3 class="text-gray-400 text-sm font-semibold uppercase mb-2">Location</h3>
+                    <p class="text-gray-200">📍 {{ event.location }}</p>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-gray-400 text-sm font-semibold uppercase mb-2">Category</h3>
+                <span class="bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full text-sm font-medium">
+                    {{ event.category.name }}
+                </span>
+            </div>
+
+            <div>
+                <h3 class="text-gray-400 text-sm font-semibold uppercase mb-2">Participants ({{ event.participants.count }})</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {% for participant in event.participants.all %}
+                    <div class="bg-gray-700 rounded-lg p-3">
+                        <p class="text-white font-medium">{{ participant.name }}</p>
+                        <p class="text-gray-400 text-sm">{{ participant.email }}</p>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-400 col-span-2">No participants yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="text-gray-500 text-sm">
+                <p>Created: {{ event.created_at|date:"F j, Y, g:i a" }}</p>
+                <p>Last Updated: {{ event.updated_at|date:"F j, Y, g:i a" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
