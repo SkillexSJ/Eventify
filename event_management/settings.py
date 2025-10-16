@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-em(^5&)#_tk#s&d01#x$tarsqgmxqz6!u%lxuet%i*et9$db2a
 DEBUG = True
 
 ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com' , 'http://127.0.0.1:8000']
 
 
 # Application definition
@@ -127,7 +128,7 @@ STATICFILES_DIRS = [
 INTERNAL_IPS =[
 "127.0.0.1",
 ]
-    
+
 
 DATABASES = {
     'default': {
