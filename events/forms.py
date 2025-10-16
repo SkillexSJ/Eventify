@@ -1,8 +1,7 @@
-# events/forms.py
+
 from django import forms
 from .models import Event, Participant, Category
 
-# A base form to apply Tailwind classes consistently
 class StyledMixin(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

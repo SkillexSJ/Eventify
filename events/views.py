@@ -1,4 +1,4 @@
-# events/views.py
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Count, Q
 from django.utils import timezone
@@ -28,14 +28,14 @@ def home(request):
 def dashboard(request):
     today = timezone.now().date()
     
-    # 1. Stats Grid Data
-    total_participants = Participant.objects.count() # Aggregate query 1
+    #  Stats Grid
+    total_participants = Participant.objects.count() 
     total_events = Event.objects.count()
     upcoming_events = Event.objects.filter(date__gte=today).count()
     past_events_count = Event.objects.filter(date__lt=today).count()
     
-    # 2. Interactive List Logic
-    filter_type = request.GET.get('filter', 'upcoming') # Default to 'upcoming'
+    #   List
+    filter_type = request.GET.get('filter', 'upcoming') 
     
     if filter_type == 'upcoming':
         events = Event.objects.filter(date__gte=today).select_related('category')
@@ -61,31 +61,31 @@ def dashboard(request):
     return render(request, 'events/dashboard.html', context)
 
 
-# --- Event CRUD & List Views ---
+# --- Event CRUD & List ---
 
 def event_list(request):
-    # Base query: Optimized with select_related and annotate
+    # Base query
     queryset = Event.objects.select_related('category').annotate(
         participant_count=Count('participants')
     )
     
-    # Get query params for search and filtering
+    # Get query params
     query = request.GET.get('q')
     category_id = request.GET.get('category')
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
 
-    # 5. Search Feature
+    # 5. Search
     if query:
         queryset = queryset.filter(
             Q(name__icontains=query) | Q(location__icontains=query)
         )
     
-    # 3. Filter Query (Category)
+    # 3. Filter Query category
     if category_id:
         queryset = queryset.filter(category_id=category_id)
         
-    # 3. Filter Query (Date Range)
+    # 3. Filter Query date range
     if start_date and end_date:
         queryset = queryset.filter(date__range=[start_date, end_date])
     
@@ -98,7 +98,7 @@ def event_list(request):
     return render(request, 'events/event_list.html', context)
 
 def event_detail(request, id):
-    # Optimized query: Use select_related for category (FK) and prefetch_related for participants (M2M)
+    # Optimized query
     event = get_object_or_404(
         Event.objects.select_related('category').prefetch_related('participants'),
         id=id
@@ -171,7 +171,7 @@ def category_delete(request, id):
 # --- Participant CRUD ---
 
 def participant_list(request):
-    participants = Participant.objects.prefetch_related('events') # Prefetch events for efficiency
+    participants = Participant.objects.prefetch_related('events') # Prefetch
     return render(request, 'events/participant_list.html', {'participants': participants})
 
 def participant_create(request):
