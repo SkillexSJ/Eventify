@@ -6,7 +6,9 @@
   <div class="bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all">
     <div class="flex items-center justify-between">
       <div>
-        <p class="text-blue-100 text-sm font-medium uppercase tracking-wide">Total Events</p>
+        <p class="text-blue-100 text-sm font-medium uppercase tracking-wide">
+          {% if dashboard_type == 'participant' %}My Events{% else %}Total Events{% endif %}
+        </p>
         <p class="text-white text-4xl font-bold mt-2">{{ total_events }}</p>
       </div>
       <div class="bg-blue-400 bg-opacity-30 rounded-full p-4">
@@ -34,8 +36,10 @@
   <div class="bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all">
     <div class="flex items-center justify-between">
       <div>
-        <p class="text-purple-100 text-sm font-medium uppercase tracking-wide">Participants</p>
-        <p class="text-white text-4xl font-bold mt-2">{{ total_participants }}</p>
+        <p class="text-purple-100 text-sm font-medium uppercase tracking-wide">
+          {% if dashboard_type == 'participant' %}My RSVPs{% else %}Total RSVPs{% endif %}
+        </p>
+        <p class="text-white text-4xl font-bold mt-2">{{ total_rsvps }}</p>
       </div>
       <div class="bg-purple-400 bg-opacity-30 rounded-full p-4">
         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -48,13 +52,23 @@
   <div class="bg-gradient-to-br from-orange-500 to-orange-700 rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all">
     <div class="flex items-center justify-between">
       <div>
-        <p class="text-orange-100 text-sm font-medium uppercase tracking-wide">Past Events</p>
-        <p class="text-white text-4xl font-bold mt-2">{{ past_events_count }}</p>
+        <p class="text-orange-100 text-sm font-medium uppercase tracking-wide">
+          {% if dashboard_type == 'participant' %}Past Events{% elif dashboard_type == 'admin' or dashboard_type == 'organizer' %}Categories{% else %}Past Events{% endif %}
+        </p>
+        <p class="text-white text-4xl font-bold mt-2">
+          {% if dashboard_type == 'admin' or dashboard_type == 'organizer' %}{{ total_categories }}{% else %}{{ past_events_count }}{% endif %}
+        </p>
       </div>
       <div class="bg-orange-400 bg-opacity-30 rounded-full p-4">
+        {% if dashboard_type == 'admin' or dashboard_type == 'organizer' %}
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+        </svg>
+        {% else %}
         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -62,7 +76,7 @@
 
 <!-- Filter -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-  <a href="{% url 'dashboard' %}?filter=all" class="block bg-gray-800 shadow-lg rounded-xl p-6 hover:bg-indigo-600 transition-all group">
+  <a href="?filter=all" class="block bg-gray-800 shadow-lg rounded-xl p-6 hover:bg-indigo-600 transition-all group">
     <div class="flex items-center justify-between">
       <div class="flex items-center">
         <div class="bg-indigo-500 bg-opacity-20 rounded-lg p-3 group-hover:bg-opacity-30 transition-all mr-4">
@@ -78,7 +92,7 @@
     </div>
   </a>
   
-  <a href="{% url 'dashboard' %}?filter=upcoming" class="block bg-gray-800 shadow-lg rounded-xl p-6 hover:bg-green-600 transition-all group">
+  <a href="?filter=upcoming" class="block bg-gray-800 shadow-lg rounded-xl p-6 hover:bg-green-600 transition-all group">
     <div class="flex items-center justify-between">
       <div class="flex items-center">
         <div class="bg-green-500 bg-opacity-20 rounded-lg p-3 group-hover:bg-opacity-30 transition-all mr-4">
@@ -94,7 +108,7 @@
     </div>
   </a>
   
-  <a href="{% url 'dashboard' %}?filter=past" class="block bg-gray-800 shadow-lg rounded-xl p-6 hover:bg-orange-600 transition-all group">
+  <a href="?filter=past" class="block bg-gray-800 shadow-lg rounded-xl p-6 hover:bg-orange-600 transition-all group">
     <div class="flex items-center justify-between">
       <div class="flex items-center">
         <div class="bg-orange-500 bg-opacity-20 rounded-lg p-3 group-hover:bg-opacity-30 transition-all mr-4">
@@ -122,17 +136,27 @@
       </div>
       <h2 class="text-2xl font-bold text-white">{{ list_title }}</h2>
     </div>
+    {% if dashboard_type == 'admin' or dashboard_type == 'organizer' %}
     <a href="{% url 'event_create' %}" class="flex items-center bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
       <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
       </svg>
       New Event
     </a>
+    {% endif %}
   </div>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for event in events %}
       <div class="bg-gray-700 rounded-lg overflow-hidden hover:bg-gray-600 transition-all transform hover:-translate-y-1 shadow-lg">
-        <!-- Event Header with Category Badge -->
+        <!-- Event Image or Category Header -->
+        {% if event.image %}
+        <div class="relative h-48 overflow-hidden">
+          <img src="{{ event.image.url }}" alt="{{ event.name }}" class="w-full h-full object-cover">
+          <div class="absolute top-3 right-3">
+            <span class="bg-indigo-600 bg-opacity-90 text-white text-xs px-3 py-1 rounded-full font-semibold">{{ event.category.name }}</span>
+          </div>
+        </div>
+        {% else %}
         <div class="bg-gradient-to-r from-indigo-500 to-purple-600 p-4 flex items-center justify-between">
           <div class="flex items-center">
             <svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,6 +165,7 @@
             <span class="text-white font-semibold">{{ event.category.name }}</span>
           </div>
         </div>
+        {% endif %}
 
         <a href="{% url 'event_detail' event.id %}" class="block p-5">
           <h3 class="text-xl font-bold text-white mb-2">{{ event.name }}</h3>
@@ -182,7 +207,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                 </svg>
               </div>
-              {{ event.participants.count }} participant{{ event.participants.count|pluralize }}
+              {{ event.rsvped_users.count }} RSVP{{ event.rsvped_users.count|pluralize }}
             </div>
           </div>
 

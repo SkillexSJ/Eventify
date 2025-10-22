@@ -1,6 +1,6 @@
 
 from django import forms
-from .models import Event, Participant, Category
+from .models import Event, Category
 
 class StyledMixin(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -17,18 +17,10 @@ class StyledMixin(forms.ModelForm):
 class EventForm(StyledMixin):
     class Meta:
         model = Event
-        fields = ['name', 'description', 'date', 'time', 'location', 'category']
+        fields = ['name', 'description', 'date', 'time', 'location', 'category' , 'image']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
             'time': forms.TimeInput(attrs={'type': 'time'}),
-        }
-
-class ParticipantForm(StyledMixin):
-    class Meta:
-        model = Participant
-        fields = ['name', 'email', 'events']
-        widgets = {
-            'events': forms.CheckboxSelectMultiple,
         }
 
 class CategoryForm(StyledMixin):
