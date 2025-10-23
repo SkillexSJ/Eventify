@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <!-- Event Image -->
+        <!-- Image -->
         {% if event.image %}
         <div class="mb-6">
             <img src="{{ event.image.url }}" alt="{{ event.name }}" class="w-full h-64 object-cover rounded-lg shadow-lg">
@@ -46,7 +46,7 @@
                 </span>
             </div>
 
-            <!-- RSVP Section -->
+            <!-- RSVP -->
             <div class="bg-gray-700 rounded-lg p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-white text-xl font-semibold">Event RSVPs ({{ event.rsvped_users.count }})</h3>

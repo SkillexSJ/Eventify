@@ -186,12 +186,12 @@ def participant_dashboard(request):
 
 # --- Event CRUD ---
 def event_list(request):
-    # Base queryset with RSVP count
+    # RSVP count
     queryset = Event.objects.select_related('category').annotate(
         rsvp_count=Count('rsvped_users')
     )
     
-    # Get query params
+    # Get query
     query = request.GET.get('search')
     category_id = request.GET.get('category')
     date_filter = request.GET.get('date_filter')
@@ -206,7 +206,7 @@ def event_list(request):
     if category_id:
         queryset = queryset.filter(category_id=category_id)
         
-    # Filter by date (upcoming/past)
+    # Filter by date
     if date_filter:
         today = timezone.now().date()
         if date_filter == 'upcoming':
@@ -330,7 +330,6 @@ def category_delete(request, id):
 
 @login_required
 def event_rsvp(request, id):
-    """Add user RSVP to event"""
     event = get_object_or_404(Event, id=id)
     
     if request.user in event.rsvped_users.all():
@@ -343,7 +342,6 @@ def event_rsvp(request, id):
 
 @login_required
 def event_cancel_rsvp(request, id):
-    """Cancel user RSVP to event"""
     event = get_object_or_404(Event, id=id)
     
     if request.user not in event.rsvped_users.all():
