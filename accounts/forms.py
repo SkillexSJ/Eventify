@@ -17,5 +17,5 @@ class CustomAuthenticationForm(AuthenticationForm):
         cleaned_data = super().clean()
         user = self.user_cache
         if user is not None and not user.is_active:
-            raise forms.ValidationError("This account is inactive.")
+            raise forms.ValidationError("This account is inactiv")
         return cleaned_data

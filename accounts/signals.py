@@ -8,14 +8,13 @@ from django.contrib.auth.models import User, Group
 
 @receiver(post_save, sender=User)
 def send_activation_email(sender, instance, created, **kwargs):
-    """Send activation email when a new non-staff user is created"""
     if created and not instance.is_staff:
-        # Assign to Participant group by default
         try:
             participant_group = Group.objects.get(name='Participant')
+            # add korlam participant group e
             instance.groups.add(participant_group)
         except Group.DoesNotExist:
-            print("Warning: Participant group does not exist. Please create it.")
+            print("error adding group")
         
         # Generate activation token and link
         token = default_token_generator.make_token(instance)
