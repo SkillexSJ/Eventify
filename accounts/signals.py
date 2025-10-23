@@ -16,9 +16,8 @@ def send_activation_email(sender, instance, created, **kwargs):
         except Group.DoesNotExist:
             print("error adding group")
         
-        # Generate activation token and link
         token = default_token_generator.make_token(instance)
-        domain = "127.0.0.1:8000"  # Change this to your production domain when deploying
+        domain = "127.0.0.1:8000"  # change hobe
         activation_link = f"http://{domain}/accounts/activate/{instance.id}/{token}/"
         
         # Email content

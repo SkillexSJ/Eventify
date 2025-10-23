@@ -61,6 +61,11 @@ def login_view(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
     
+    
+    if request.method == 'GET':
+        old_messages = messages.get_messages(request)
+        old_messages.used = True
+    
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')

@@ -16,6 +16,7 @@ class Event(models.Model):
     time = models.TimeField()
     location = models.CharField(max_length=200)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='events')
+    # image field add korlam
     image = models.ImageField(upload_to='event_images/', blank=True, null=True)
     rsvped_users = models.ManyToManyField(User, related_name='rsvped_events', blank=True)
 
@@ -25,6 +26,3 @@ class Event(models.Model):
     def __str__(self):
         return self.name
 
-
-
-# BAd diye dilam 

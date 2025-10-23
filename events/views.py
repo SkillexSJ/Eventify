@@ -8,7 +8,6 @@ from .forms import EventForm, CategoryForm
 
 
 def permission_denied_view(request):
-    """View to show when user doesn't have permission"""
     return render(request, 'events/no-permission.html', status=403)
 
 
@@ -25,7 +24,6 @@ def is_participant(user):
 
 
 def is_admin_or_organizer(user):
-    """Check if user is Admin or Organizer (both can manage events and categories)"""
     return user.is_authenticated and (
         user.is_superuser or 
         user.groups.filter(name__in=['Admin', 'Organizer']).exists()
@@ -33,15 +31,12 @@ def is_admin_or_organizer(user):
 
 
 # --- Home View ---
-
 def home(request):
-    """Homepage with hero section and upcoming events"""
     today = timezone.now().date()
     upcoming_events = Event.objects.filter(date__gte=today).select_related('category').order_by('date')[:6]
     total_events = Event.objects.count()
     total_categories = Category.objects.count()
     
-    # Count total RSVPs across all events
     total_rsvps = Event.objects.aggregate(Count('rsvped_users'))['rsvped_users__count'] or 0
     
     context = {
@@ -53,10 +48,8 @@ def home(request):
     return render(request, 'events/home.html', context)
 
 # --- Dashboard Views ---
-
 @login_required
 def dashboard(request):
-    """Redirect to appropriate dashboard based on user role"""
     user = request.user
     if user.is_superuser or user.groups.filter(name='Admin').exists():
         return redirect('admin_dashboard')
@@ -65,14 +58,12 @@ def dashboard(request):
     elif user.groups.filter(name='Participant').exists():
         return redirect('participant_dashboard')
     else:
-        # Default to participant dashboard for users without specific role
         return redirect('participant_dashboard')
 
 
 @login_required
 @user_passes_test(is_admin, login_url='/no-permission/')
 def admin_dashboard(request):
-    """Admin Dashboard: Manage all events, participants, and categories"""
     today = timezone.now().date()
     
     # Stats Grid
@@ -114,7 +105,6 @@ def admin_dashboard(request):
 @login_required
 @user_passes_test(is_organizer, login_url='/no-permission/')
 def organizer_dashboard(request):
-    """Organizer Dashboard: Manage events and categories"""
     today = timezone.now().date()
     
     # Stats Grid

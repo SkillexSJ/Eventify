@@ -4,7 +4,7 @@
 <div class="max-w-lg mx-auto bg-gray-800 p-8 rounded-xl shadow-lg">
     <h1 class="text-3xl font-bold text-white mb-6">Login</h1>
     
-    <!-- Display messages -->
+    <!-- messages -->
     {% if messages %}
         {% for message in messages %}
         <div class="mb-4 p-3 rounded-md {% if message.tags == 'error' %}bg-red-900/50 text-red-400{% elif message.tags == 'success' %}bg-green-900/50 text-green-400{% else %}bg-blue-900/50 text-blue-400{% endif %}">
@@ -12,7 +12,7 @@
         </div>
         {% endfor %}
     {% endif %}
-    
+    {% comment %} FORM {% endcomment %}
     <form method="POST" class="space-y-6" action="{% url 'login' %}">
         {% csrf_token %}
         

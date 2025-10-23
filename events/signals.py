@@ -8,7 +8,6 @@ from django.conf import settings
 
 @receiver(m2m_changed, sender=Event.rsvped_users.through)
 def send_rsvp_confirmation(sender, instance, action, pk_set, **kwargs):
-    """Send RSVP confirmation email when user RSVPs to an event"""
     if action == "post_add":
         for user_id in pk_set:
             try:
@@ -35,9 +34,6 @@ def send_rsvp_confirmation(sender, instance, action, pk_set, **kwargs):
 
                 Best regards,
                 The Eventify Team
-
-                ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                This is an automated message. Please do not reply to this email.
                 """
 
                 send_mail(
@@ -47,8 +43,8 @@ def send_rsvp_confirmation(sender, instance, action, pk_set, **kwargs):
                     [user.email],
                     fail_silently=False,
                 )
-                
-                print(f"RSVP confirmation email sent to {user.email} for event '{event.name}'")
+
+                print(f"RSVP confirmation email sent to user {user_id}")
                 
             except User.DoesNotExist:
                 print(f"User with ID {user_id} does not exist")
