@@ -145,11 +145,10 @@ def organizer_dashboard(request):
 
 @login_required
 def participant_dashboard(request):
-    """Participant Dashboard: View events they have RSVP'd to"""
     today = timezone.now().date()
     user = request.user
     
-    # Get events user has RSVP'd to
+    # participated events
     rsvped_events = Event.objects.filter(rsvped_users=user).select_related('category').prefetch_related('rsvped_users')
     
     # Stats Grid
@@ -185,21 +184,19 @@ def participant_dashboard(request):
     return render(request, 'events/participant_dashboard.html', context)
 
 
-# --- Event CRUD & List ---
-
+# --- Event CRUD ---
 def event_list(request):
-    # Base query with RSVP count
+    # Base queryset with RSVP count
     queryset = Event.objects.select_related('category').annotate(
         rsvp_count=Count('rsvped_users')
     )
     
     # Get query params
-    query = request.GET.get('q')
+    query = request.GET.get('search')
     category_id = request.GET.get('category')
-    start_date = request.GET.get('start_date')
-    end_date = request.GET.get('end_date')
+    date_filter = request.GET.get('date_filter')
 
-    # Search
+    # Search by name or location
     if query:
         queryset = queryset.filter(
             Q(name__icontains=query) | Q(location__icontains=query)
@@ -209,9 +206,13 @@ def event_list(request):
     if category_id:
         queryset = queryset.filter(category_id=category_id)
         
-    # Filter by date range
-    if start_date and end_date:
-        queryset = queryset.filter(date__range=[start_date, end_date])
+    # Filter by date (upcoming/past)
+    if date_filter:
+        today = timezone.now().date()
+        if date_filter == 'upcoming':
+            queryset = queryset.filter(date__gte=today)
+        elif date_filter == 'past':
+            queryset = queryset.filter(date__lt=today)
     
     categories = Category.objects.all()
 
@@ -223,18 +224,18 @@ def event_list(request):
 
 @login_required
 def event_detail(request, id):
-    # Optimized query with RSVP users
+    # Optimized
     event = get_object_or_404(
         Event.objects.select_related('category').prefetch_related('rsvped_users'),
         id=id
     )
     
-    # Check if current user has RSVP'd
+    # Check
     user_has_rsvped = False
     if request.user.is_authenticated:
         user_has_rsvped = event.rsvped_users.filter(id=request.user.id).exists()
     
-    # Check if user can edit/delete (admin or organizer)
+    # role checking
     can_manage_event = is_admin_or_organizer(request.user)
     
     context = {
@@ -244,7 +245,7 @@ def event_detail(request, id):
     }
     return render(request, 'events/event_detail.html', context)
 
-@login_required
+@user_passes_test(login_required, login_url='/no-permission/')
 @user_passes_test(is_admin_or_organizer, login_url='/no-permission/')
 def event_create(request):
     if request.method == 'POST':
@@ -262,6 +263,7 @@ def event_create(request):
 def event_update(request, id):
     event = get_object_or_404(Event, id=id)
     if request.method == 'POST':
+        # image handle korbe
         form = EventForm(request.POST, request.FILES, instance=event)
         if form.is_valid():
             form.save()
