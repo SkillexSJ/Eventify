@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'events',
     "debug_toolbar",
     'accounts',
-    'accounts.apps.AccountsConfig'
 ]
 
 MIDDLEWARE = [

@@ -8,7 +8,6 @@ from django.contrib.auth.models import User, Group
 
 @receiver(post_save, sender=User)
 def add_user_to_participant_group(sender, instance, created, **kwargs):
-    """Auto-assign new users to Participant group"""
     if created and not instance.is_staff:
         try:
             participant_group = Group.objects.get(name='Participant')
