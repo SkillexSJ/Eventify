@@ -17,22 +17,24 @@ def send_activation_email(sender, instance, created, **kwargs):
             print("error adding group")
         
         token = default_token_generator.make_token(instance)
-        domain = "127.0.0.1:8000"  # change hobe
-        activation_link = f"http://{domain}/accounts/activate/{instance.id}/{token}/"
+        domain = settings.SITE_DOMAIN
+        # Use https for production (render.com), http for localhost
+        protocol = 'https' if 'render.com' in domain else 'http'
+        activation_link = f"{protocol}://{domain}/accounts/activate/{instance.id}/{token}/"
         
         # Email content
         subject = "Activate your Eventify account"
         message = f"""Hi {instance.username},
 
-            Welcome to Eventify! 🎉
+Welcome to Eventify! 🎉
 
-            Please click the link below to activate your account:
-            {activation_link}
+Please click the link below to activate your account:
+{activation_link}
 
-            If you didn't create this account, please ignore this email.
+If you didn't create this account, please ignore this email.
 
-            Thank you!
-            The Eventify Team"""
+Thank you!
+The Eventify Team"""
 
         try:
             send_mail(
