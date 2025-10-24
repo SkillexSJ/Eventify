@@ -7,7 +7,7 @@
     <!-- messages -->
     {% if messages %}
         {% for message in messages %}
-        <div class="mb-4 p-3 rounded-md {% if message.tags == 'error' %}bg-red-900/50 text-red-400{% elif message.tags == 'success' %}bg-green-900/50 text-green-400{% else %}bg-blue-900/50 text-blue-400{% endif %}">
+        <div class="mb-4 p-3 rounded-md {% if message.tags == 'error' %}bg-red-900/50 text-red-400{% elif message.tags == 'success' %}bg-green-900/50 text-green-400{% else %}bg-indigo-800/50 text-blue-400{% endif %}">
             {{ message }}
         </div>
         {% endfor %}

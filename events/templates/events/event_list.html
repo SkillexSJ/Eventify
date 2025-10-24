@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="flex justify-between items-center mb-6">
+{% comment %} <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold text-white">Events</h1>
     <a href="{% url 'event_create' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md font-medium">
         + Add Event
     </a>
-</div>
+</div> {% endcomment %}
 
 <!-- Search-->
 <form method="GET" action="{% url 'event_list' %}" class="bg-gray-800 p-4 rounded-lg shadow-lg mb-6 space-y-4 md:space-y-0 md:flex md:space-x-4">
