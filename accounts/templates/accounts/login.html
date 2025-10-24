@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-lg mx-auto bg-gray-800 p-8 rounded-xl shadow-lg">
+    <h1 class="text-3xl font-bold text-white mb-6">Login</h1>
+    
+    <!-- messages -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="mb-4 p-3 rounded-md {% if message.tags == 'error' %}bg-red-900/50 text-red-400{% elif message.tags == 'success' %}bg-green-900/50 text-green-400{% else %}bg-indigo-800/50 text-blue-400{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% comment %} FORM {% endcomment %}
+    <form method="POST" class="space-y-6" action="{% url 'login' %}">
+        {% csrf_token %}
+        
+        <div>
+            <label for="username" class="block text-sm font-medium text-gray-300 mb-1">
+                Username
+            </label>
+            <input type="text" name="username" id="username" required
+                   class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 text-gray-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                   placeholder="Enter your username">
+        </div>
+        
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-300 mb-1">
+                Password
+            </label>
+            <input type="password" name="password" id="password" required
+                   class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 text-gray-200 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                   placeholder="Enter your password">
+        </div>
+        
+        <input type="hidden" name="next" value="{{ next|default:'/' }}">
+        
+        <div class="flex items-center justify-between">
+            <a href="#" class="text-sm text-indigo-400 hover:underline">Forgot password?</a>
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md font-medium">
+                Login
+            </button>
+        </div>
+        
+        <div class="text-center text-sm text-gray-400">
+            Don't have an account? 
+            <a href="{% url 'signup' %}" class="text-indigo-400 hover:underline">Sign up here</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

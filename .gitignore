@@ -13,11 +13,15 @@ __pycache__/
 *$py.class
 *.pyc
 *.pyo
+*.so
+.Python
+*.log
 
 # Django
 *.log
 db.sqlite3
 db.sqlite3-journal
+/media
 /staticfiles
 
 # IDE
