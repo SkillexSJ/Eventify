@@ -25,11 +25,15 @@
             <p class="text-red-400 text-sm mt-1">{{ error }}</p>
         {% endfor %}
 
-        <div class="flex justify-end">
+        <div class="flex justify-start">
             <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md font-medium">
                 Create Account
             </button>
         </div>
     </form>
+    <div class="text-center text-sm text-gray-400 mt-4">
+            Already have an account? 
+            <a href="{% url 'login' %}" class="text-indigo-400 hover:underline">Log in here</a>
+    </div>
 </div>
 {% endblock %}
