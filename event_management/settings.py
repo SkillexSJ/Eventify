@@ -13,10 +13,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-em(^5&)#_tk#s&d01#x$tarsqgmxqz6!u%lxuet%i*et9$db2a'
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-em(^5&)#_tk#s&d01#x$tarsqgmxqz6!u%lxuet%i*et9$db2a')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com' , 'http://127.0.0.1:8000']
@@ -70,19 +70,9 @@ WSGI_APPLICATION = 'event_management.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-
-
 DATABASES = {
     'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default='postgresql://eventify_db_nx3x_user:JIBDff3oqSlRMyyVD4l8rP5yfA5Dn1kF@dpg-d3odqiemcj7s73esm5ig-a.oregon-postgres.render.com/eventify_db_nx3x',
+        default=config('DATABASE_URL'),
         conn_max_age=600
     )
 }
@@ -132,18 +122,6 @@ INTERNAL_IPS =[
 "127.0.0.1",
 ]
 
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config("DATABASE_NAME"),
-        'USER': config("DATABASE_USER"),
-        'PASSWORD': config("DATABASE_PASSWORD"),
-        'HOST': config("DATABASE_HOST"),
-        'PORT': config("DATABASE_PORT" , cast=int),
-    }
-}
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -152,7 +130,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = config("EMAIL_BACKEND", default='django.core.mail.backends.smtp.EmailBackend')
 EMAIL_HOST = config("EMAIL_HOST", default='smtp.gmail.com')
-EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True)
-EMAIL_PORT = config("EMAIL_PORT")
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
+EMAIL_PORT = config("EMAIL_PORT", cast=int)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
