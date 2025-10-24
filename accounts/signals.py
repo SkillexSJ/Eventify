@@ -17,7 +17,7 @@ def send_activation_email(sender, instance, created, **kwargs):
             print("error adding group")
         
         token = default_token_generator.make_token(instance)
-        domain = "127.0.0.1:8000"  # change hobe
+        domain = settings.SITE_DOMAIN
         activation_link = f"http://{domain}/accounts/activate/{instance.id}/{token}/"
         
         # Email content

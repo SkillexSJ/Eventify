@@ -15,12 +15,14 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-em(^5&)#_tk#s&d01#x$tarsqgmxqz6!u%lxuet%i*et9$db2a')
 
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com' , 'http://127.0.0.1:8000']
-
+SITE_DOMAIN = config('SITE_DOMAIN', default='127.0.0.1:8000')
 
 # Application definition
 
