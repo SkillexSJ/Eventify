@@ -18,7 +18,7 @@ def send_activation_email(sender, instance, created, **kwargs):
         
         token = default_token_generator.make_token(instance)
         domain = settings.SITE_DOMAIN
-        # Use https for production (render.com), http for localhost
+       
         protocol = 'https' if 'render.com' in domain else 'http'
         activation_link = f"{protocol}://{domain}/accounts/activate/{instance.id}/{token}/"
         
@@ -42,7 +42,7 @@ The Eventify Team"""
                 message,
                 settings.EMAIL_HOST_USER,
                 [instance.email],
-                fail_silently=False,
+                fail_silently=True,
             )
             print(f"Activation email sent to {instance.email}")
         except Exception as e:

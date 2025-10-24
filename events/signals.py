@@ -41,7 +41,7 @@ def send_rsvp_confirmation(sender, instance, action, pk_set, **kwargs):
                     body,
                     settings.EMAIL_HOST_USER,
                     [user.email],
-                    fail_silently=False,
+                    fail_silently=True,
                 )
 
                 print(f"RSVP confirmation email sent to user {user_id}")
