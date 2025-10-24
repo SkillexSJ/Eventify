@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'events',
     "debug_toolbar",
-    'accounts'
+    'accounts',
+    'accounts.apps.AccountsConfig'
 ]
 
 MIDDLEWARE = [

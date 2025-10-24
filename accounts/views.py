@@ -18,11 +18,13 @@ def signUp(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_active = False  # deactivate
+            user.is_active = True  # Auto-activate user
             user.save()
-                
-            messages.success(request, "Account created successfully! Please check your email to activate your account.")
-            return render(request, 'accounts/activation_sent.html')
+            
+            # Auto login after signup
+            login(request, user)
+            messages.success(request, "Account created successfully! Welcome to Eventify!")
+            return redirect('dashboard')
         else:
             messages.error(request, "Please correct the errors below.")
     else:
@@ -61,7 +63,6 @@ def login_view(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
     
-    
     if request.method == 'GET':
         old_messages = messages.get_messages(request)
         old_messages.used = True
@@ -74,15 +75,12 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         
         if user is not None:
-            if user.is_active:
-                # Login
-                login(request, user)
-                messages.success(request, f"Welcome back, {user.username}!")
-            
-                next_page = request.GET.get('next') or request.POST.get('next', 'dashboard')
-                return redirect(next_page)
-            else:
-                messages.error(request, "Your account is not activated, Please check your email for activation link.")
+            # Login
+            login(request, user)
+            messages.success(request, f"Welcome back, {user.username}!")
+        
+            next_page = request.GET.get('next') or request.POST.get('next', 'dashboard')
+            return redirect(next_page)
         else:
             messages.error(request, "Invalid username or password, Please try again.")
     
