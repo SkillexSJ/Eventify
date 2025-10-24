@@ -2,8 +2,10 @@ asgiref==3.10.0
 dj-database-url==3.0.1
 Django==5.2.7
 django-debug-toolbar==6.0.0
+pillow==12.0.0
 psycopg-binary==3.2.10
 psycopg2-binary==2.9.11
+python-decouple==3.8
 sqlparse==0.5.3
 typing_extensions==4.15.0
 tzdata==2025.2
